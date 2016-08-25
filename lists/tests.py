@@ -1,10 +1,11 @@
 from django.core.urlresolvers import resolve
 from django.test import TestCase
-from django.http import HttpRequest
 from django.template.loader import render_to_string
 
 from lists.views import home_page
 from lists.models import Item, List
+
+import logging
 
 class HomePageTest(TestCase):
 
@@ -13,11 +14,9 @@ class HomePageTest(TestCase):
     self.assertEqual(found.func, home_page)
 
   def test_home_page_returns_correct_html(self):
-    request = HttpRequest()
-    response = home_page(request)
+    response = self.client.get('/')
 
-    expected_html = render_to_string('home.html')
-    self.assertEqual(response.content.decode(), expected_html)
+    self.assertTemplateUsed(response, 'home.html')
 
 
 class ListAndItemModelTest(TestCase):
